@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,10 +16,11 @@ import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useTRPC } from "@/trpc/client";
-import { useMutation } from "@tanstack/react-query";
+// import { useTRPC } from "@/trpc/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useTRPC } from "@/trpc/client";
 
 type formType = z.infer<typeof loginSchema>;
 
@@ -30,12 +30,36 @@ const poppins = Poppins({
 });
 export const SignInView = () => {
   const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
   const login = useMutation(
     trpc.auth.login.mutationOptions({
       onError: (error) => toast.error(error.message),
-      onSuccess: () => router.push("/"),
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(trpc.auth.session.queryFilter());
+        router.push("/");
+      },
     })
   );
+  //one way to login
+  // const login = useMutation({
+  //   mutationFn: async (values: formType) => {
+  //     const response = await fetch("/api/users/login", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(values),
+  //     });
+  //     if (!response.ok) {
+  //       const error = await response.json();
+  //       throw new Error(error.message || "Login failed");
+  //     }
+  //     return response.json();
+  //   },
+  //   onError: (error) => toast.error(error.message),
+  //   onSuccess: () => router.push("/"),
+  // });
   const router = useRouter();
   const form = useForm<formType>({
     mode: "all",
