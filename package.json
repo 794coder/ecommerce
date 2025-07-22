@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload",
     "generate:types": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload generate:types",
     "db:seed": "dotenv -e .env tsx src/seed.ts"
   },
@@ -16,6 +17,7 @@
     "@payloadcms/db-mongodb": "^3.48.0",
     "@payloadcms/next": "^3.48.0",
     "@payloadcms/payload-cloud": "^3.48.0",
+    "@payloadcms/plugin-multi-tenant": "^3.48.0",
     "@payloadcms/richtext-lexical": "^3.48.0",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
@@ -68,6 +70,7 @@
     "react-resizable-panels": "^3.0.3",
     "recharts": "^2.15.4",
     "server-only": "^0.0.1",
+    "slugify": "^1.6.6",
     "sonner": "^2.0.6",
     "superjson": "^2.2.2",
     "tailwind-merge": "^3.3.1",
